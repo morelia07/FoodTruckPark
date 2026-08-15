@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if foodtruck %}
+Editar Food Truck
+{% else %}
+Nuevo Food Truck
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>
+
+            {% if foodtruck %}
+                ✏️ Editar Food Truck
+            {% else %}
+                ➕ Nuevo Food Truck
+            {% endif %}
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="mb-3">
+
+                <label class="form-label">Nombre</label>
+
+                <input
+                    type="text"
+                    name="nombre"
+                    class="form-control"
+                    value="{{ foodtruck.nombre|default:'' }}"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">Propietario</label>
+
+                <input
+                    type="text"
+                    name="propietario"
+                    class="form-control"
+                    value="{{ foodtruck.propietario|default:'' }}"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">Tipo de comida</label>
+
+                <input
+                    type="text"
+                    name="tipo_comida"
+                    class="form-control"
+                    value="{{ foodtruck.tipo_comida|default:'' }}"
+                    required
+                >
+
+            </div>
+
+            <div class="form-check mb-4">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="estado"
+                    id="estado"
+
+                    {% if foodtruck %}
+                        {% if foodtruck.estado %}
+                            checked
+                        {% endif %}
+                    {% else %}
+                        checked
+                    {% endif %}
+                >
+
+                <label class="form-check-label" for="estado">
+                    Activo
+                </label>
+
+            </div>
+
+            <button type="submit" class="btn btn-success">
+
+                💾 Guardar
+
+            </button>
+
+            <a href="{% url 'lista_foodtrucks' %}" class="btn btn-secondary">
+
+                Cancelar
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

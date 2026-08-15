@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Productos
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>🍔 Gestión de Productos</h2>
+
+    <a href="{% url 'crear_producto' %}" class="btn btn-primary">
+        ➕ Nuevo Producto
+    </a>
+
+</div>
+
+
+<form method="GET" class="mb-4">
+
+    <div class="row">
+
+        <div class="col-md-10">
+
+            <input
+                type="text"
+                name="buscar"
+                class="form-control"
+                placeholder="Buscar producto..."
+                value="{{ buscar }}"
+            >
+
+        </div>
+
+
+        <div class="col-md-2 d-grid">
+
+            <button class="btn btn-secondary">
+                🔍 Buscar
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+<table class="table table-bordered table-hover align-middle">
+
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Nombre</th>
+            <th>Food Truck</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th width="220">Acciones</th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+
+    {% for producto in productos %}
+
+
+        <tr>
+
+
+            <td>
+                {{ producto.nombre }}
+            </td>
+
+
+            <td>
+                {{ producto.foodtruck.nombre }}
+            </td>
+
+
+            <td>
+                ${{ producto.precio }}
+            </td>
+
+
+            <td>
+                {{ producto.stock }}
+            </td>
+
+
+            <td>
+
+
+                <a
+                    href="{% url 'editar_producto' producto.id %}"
+                    class="btn btn-warning btn-sm"
+                >
+                    ✏️ Editar
+                </a>
+
+
+                <a
+                    href="{% url 'eliminar_producto' producto.id %}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('¿Está seguro de eliminar este producto?')"
+                >
+                    🗑️ Eliminar
+                </a>
+
+
+            </td>
+
+
+        </tr>
+
+
+    {% empty %}
+
+
+        <tr>
+
+            <td colspan="5" class="text-center">
+
+                No hay productos registrados.
+
+            </td>
+
+        </tr>
+
+
+    {% endfor %}
+
+
+    </tbody>
+
+
+</table>
+
+
+{% endblock %}

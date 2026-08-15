@@ -1,0 +1,430 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Inicio - Food Truck Park
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+
+    <h2 class="fw-bold">
+        ¡Bienvenido a Food Truck Park! 👋
+    </h2>
+
+    <p class="text-muted mb-0">
+        Administra tus food trucks, productos y ventas desde un solo lugar.
+    </p>
+
+</div>
+
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <div>
+
+                <h5 class="fw-bold mb-1">
+                    📊 Resumen de ventas
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Período: {{ nombre_periodo }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form method="GET">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Período
+                    </label>
+
+                    <select
+                        name="periodo"
+                        class="form-select"
+                        onchange="mostrarFechas(this.value)"
+                    >
+
+                        <option value="todo"
+                            {% if periodo == 'todo' %}selected{% endif %}>
+                            Todo
+                        </option>
+
+                        <option value="hoy"
+                            {% if periodo == 'hoy' %}selected{% endif %}>
+                            Hoy
+                        </option>
+
+                        <option value="7"
+                            {% if periodo == '7' %}selected{% endif %}>
+                            Últimos 7 días
+                        </option>
+
+                        <option value="30"
+                            {% if periodo == '30' %}selected{% endif %}>
+                            Últimos 30 días
+                        </option>
+
+                        <option value="mes"
+                            {% if periodo == 'mes' %}selected{% endif %}>
+                            Este mes
+                        </option>
+
+                        <option value="anterior"
+                            {% if periodo == 'anterior' %}selected{% endif %}>
+                            Mes anterior
+                        </option>
+
+                        <option value="personalizado"
+                            {% if periodo == 'personalizado' %}selected{% endif %}>
+                            Personalizado
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    id="fechas-personalizadas"
+                    class="row g-3"
+                    style="display: none;"
+                >
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Desde
+                        </label>
+
+                        <input
+                            type="date"
+                            name="fecha_desde"
+                            class="form-control"
+                            value="{{ fecha_desde|date:'Y-m-d' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Hasta
+                        </label>
+
+                        <input
+                            type="date"
+                            name="fecha_hasta"
+                            class="form-control"
+                            value="{{ fecha_hasta|date:'Y-m-d' }}"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+                        🔍 Filtrar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="text-muted mb-1">
+                            Food Trucks
+                        </p>
+
+                        <h2 class="fw-bold mb-0">
+                            {{ total_foodtrucks }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1">
+                        🚚
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="text-muted mb-1">
+                            Productos
+                        </p>
+
+                        <h2 class="fw-bold mb-0">
+                            {{ total_productos }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1">
+                        🍔
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="text-muted mb-1">
+                            Ventas realizadas
+                        </p>
+
+                        <h2 class="fw-bold mb-0">
+                            {{ total_ventas }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1">
+                        💵
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="text-muted mb-1">
+                            Total vendido
+                        </p>
+
+                        <h2 class="fw-bold mb-0">
+                            ${{ total_vendido|floatformat:2 }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1">
+                        📊
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="card border-0 shadow-sm mt-5">
+
+    <div class="card-body p-4">
+
+        <h4 class="fw-bold mb-1">
+            Accesos rápidos
+        </h4>
+
+        <p class="text-muted mb-4">
+            Accede rápidamente a las principales funciones del sistema.
+        </p>
+
+
+        <div class="row g-3">
+
+
+            <div class="col-md-3">
+
+                <a
+                    href="{% url 'lista_foodtrucks' %}"
+                    class="btn btn-outline-primary w-100 py-3"
+                >
+
+                    🚚
+                    <br>
+                    Food Trucks
+
+                </a>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <a
+                    href="{% url 'lista_productos' %}"
+                    class="btn btn-outline-success w-100 py-3"
+                >
+
+                    🍔
+                    <br>
+                    Productos
+
+                </a>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <a
+                    href="{% url 'lista_ventas' %}"
+                    class="btn btn-outline-warning w-100 py-3"
+                >
+
+                    💵
+                    <br>
+                    Ventas
+
+                </a>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <a
+                    href="{% url 'reporte_ventas' %}"
+                    class="btn btn-outline-dark w-100 py-3"
+                >
+
+                    📊
+                    <br>
+                    Reportes
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="mt-4 mb-3">
+
+    <p class="text-muted text-center mb-0">
+
+        FoodTruckPark · Sistema de gestión y facturación
+
+    </p>
+
+</div>
+
+
+<script>
+
+function mostrarFechas(periodo) {
+
+    const fechas = document.getElementById(
+        'fechas-personalizadas'
+    );
+
+    if (periodo === 'personalizado') {
+
+        fechas.style.display = 'flex';
+
+    } else {
+
+        fechas.style.display = 'none';
+
+    }
+}
+
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function() {
+
+        const selector = document.querySelector(
+            'select[name="periodo"]'
+        );
+
+        mostrarFechas(selector.value);
+
+    }
+);
+
+</script>
+
+{% endblock %}

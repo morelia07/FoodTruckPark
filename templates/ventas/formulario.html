@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Nueva Venta
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>
+            💵 Registrar Factura
+        </h3>
+
+    </div>
+
+
+    <div class="card-body">
+
+        {% if error %}
+        <div class="alert alert-danger">
+             ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <h5 class="mb-3">
+                Productos
+            </h5>
+
+
+            <table class="table table-bordered">
+
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Seleccionar</th>
+
+                        <th>Food Truck</th>
+
+                        <th>Producto</th>
+
+                        <th>Precio</th>
+
+                        <th>Cantidad</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for producto in productos %}
+
+                    <tr>
+
+
+                        <td>
+
+                            <input
+                                type="checkbox"
+                                name="productos"
+                                value="{{ producto.id }}"
+                            >
+
+                        </td>
+
+
+
+                        <td>
+
+                            {{ producto.foodtruck.nombre }}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {{ producto.nombre }}
+
+                        </td>
+
+
+
+                        <td>
+
+                            ${{ producto.precio }}
+
+                        </td>
+
+
+
+                        <td>
+
+                            <input
+                                type="number"
+                                name="cantidad_{{ producto.id }}"
+                                class="form-control"
+                                min="1"
+                                value="1"
+                            >
+
+                        </td>
+
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+
+            <div class="mb-3">
+
+
+                <label class="form-label">
+
+                    Método de pago
+
+                </label>
+
+
+
+                <select
+                    name="metodo_pago"
+                    class="form-select"
+                    required
+                >
+
+                    <option value="EFECTIVO">
+                        EFECTIVO
+                    </option>
+
+
+                    <option value="TARJETA">
+                        TARJETA
+                    </option>
+
+
+                    <option value="TRANSFERENCIA">
+                        TRANSFERENCIA
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+
+                💾 Generar Factura
+
+            </button>
+
+
+
+            <a
+                href="{% url 'lista_ventas' %}"
+                class="btn btn-secondary"
+            >
+
+                Cancelar
+
+            </a>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

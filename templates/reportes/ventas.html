@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Reporte de Ventas
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="fw-bold">
+            📊 Reporte de Ventas
+        </h2>
+
+        <p class="text-muted mb-0">
+            Período: {{ nombre_periodo }}
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <h5 class="fw-bold mb-3">
+            Filtrar por período
+        </h5>
+
+
+        <form method="GET">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Período
+                    </label>
+
+                    <select
+                        name="periodo"
+                        class="form-select"
+                        onchange="mostrarFechas(this.value)"
+                    >
+
+                        <option value="todo"
+                            {% if periodo == 'todo' %}selected{% endif %}>
+                            Todo
+                        </option>
+
+                        <option value="hoy"
+                            {% if periodo == 'hoy' %}selected{% endif %}>
+                            Hoy
+                        </option>
+
+                        <option value="7"
+                            {% if periodo == '7' %}selected{% endif %}>
+                            Últimos 7 días
+                        </option>
+
+                        <option value="30"
+                            {% if periodo == '30' %}selected{% endif %}>
+                            Últimos 30 días
+                        </option>
+
+                        <option value="mes"
+                            {% if periodo == 'mes' %}selected{% endif %}>
+                            Este mes
+                        </option>
+
+                        <option value="anterior"
+                            {% if periodo == 'anterior' %}selected{% endif %}>
+                            Mes anterior
+                        </option>
+
+                        <option value="personalizado"
+                            {% if periodo == 'personalizado' %}selected{% endif %}>
+                            Personalizado
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    id="fechas-personalizadas"
+                    class="row g-3"
+                    style="display: none;"
+                >
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Desde
+                        </label>
+
+                        <input
+                            type="date"
+                            name="fecha_desde"
+                            class="form-control"
+                            value="{{ fecha_desde|date:'Y-m-d' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Hasta
+                        </label>
+
+                        <input
+                            type="date"
+                            name="fecha_hasta"
+                            class="form-control"
+                            value="{{ fecha_hasta|date:'Y-m-d' }}"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+                        🔍 Filtrar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-6">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <p class="text-muted mb-1">
+                    Total vendido
+                </p>
+
+                <h2 class="fw-bold mb-0">
+                    ${{ total_general|floatformat:2 }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-6">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <p class="text-muted mb-1">
+                    Food Trucks con ventas
+                </p>
+
+                <h2 class="fw-bold mb-0">
+                    {{ totales_foodtruck|length }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <h5 class="fw-bold mb-3">
+            Detalle de productos vendidos
+        </h5>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>
+                            Food Truck
+                        </th>
+
+                        <th>
+                            Producto
+                        </th>
+
+                        <th>
+                            Cantidad Total
+                        </th>
+
+                        <th>
+                            Total Generado
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for detalle in detalles %}
+
+                    <tr>
+
+                        <td>
+                            {{ detalle.producto__foodtruck__nombre }}
+                        </td>
+
+                        <td>
+                            {{ detalle.producto__nombre }}
+                        </td>
+
+                        <td>
+                            {{ detalle.cantidad_total }}
+                        </td>
+
+                        <td>
+                            ${{ detalle.total_generado|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="text-center"
+                        >
+                            No hay ventas para el período seleccionado.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body">
+
+        <h5 class="fw-bold mb-3">
+            💰 Total vendido por Food Truck
+        </h5>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>
+                            Food Truck
+                        </th>
+
+                        <th>
+                            Total Vendido
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for foodtruck, total in totales_foodtruck.items %}
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ foodtruck }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <strong>
+                                ${{ total|floatformat:2 }}
+                            </strong>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="2"
+                            class="text-center"
+                        >
+                            No hay ventas para el período seleccionado.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="alert alert-success text-end mb-0">
+
+            <strong>
+                TOTAL GENERAL:
+                ${{ total_general|floatformat:2 }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function mostrarFechas(periodo) {
+
+    const fechas = document.getElementById(
+        'fechas-personalizadas'
+    );
+
+    if (periodo === 'personalizado') {
+
+        fechas.style.display = 'flex';
+
+    } else {
+
+        fechas.style.display = 'none';
+
+    }
+}
+
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function() {
+
+        const selector = document.querySelector(
+            'select[name="periodo"]'
+        );
+
+        mostrarFechas(selector.value);
+
+    }
+);
+
+</script>
+
+{% endblock %}

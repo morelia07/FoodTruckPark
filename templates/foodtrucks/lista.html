@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Food Trucks
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>🚚 Gestión de Food Trucks</h2>
+
+    <a href="{% url 'crear_foodtruck' %}" class="btn btn-primary">
+        ➕ Nuevo Food Truck
+    </a>
+
+</div>
+
+<form method="GET" class="mb-4">
+
+    <div class="row">
+
+        <div class="col-md-10">
+
+            <input
+                type="text"
+                name="buscar"
+                class="form-control"
+                placeholder="Buscar por nombre..."
+                value="{{ busqueda }}"
+            >
+
+        </div>
+
+        <div class="col-md-2 d-grid">
+
+            <button class="btn btn-secondary">
+                🔍 Buscar
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+<table class="table table-bordered table-hover align-middle">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Nombre</th>
+            <th>Propietario</th>
+            <th>Tipo de comida</th>
+            <th>Estado</th>
+            <th width="220">Acciones</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for foodtruck in foodtrucks %}
+
+        <tr>
+
+            <td>{{ foodtruck.nombre }}</td>
+
+            <td>{{ foodtruck.propietario }}</td>
+
+            <td>{{ foodtruck.tipo_comida }}</td>
+
+            <td>
+
+                {% if foodtruck.estado %}
+
+                    <span class="badge bg-success">
+                        Activo
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger">
+                        Inactivo
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                <a
+                    href="{% url 'editar_foodtruck' foodtruck.id %}"
+                    class="btn btn-warning btn-sm"
+                >
+                    ✏️ Editar
+                </a>
+
+                <a
+                    href="{% url 'eliminar_foodtruck' foodtruck.id %}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('¿Desea eliminar este Food Truck? También se eliminarán todos sus productos.')"
+                >
+                    🗑️ Eliminar
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% empty %}
+
+        <tr>
+
+            <td colspan="5" class="text-center">
+
+                No hay Food Trucks registrados.
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}
